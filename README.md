@@ -9,6 +9,7 @@ Here are my notes for learning system design concepts. I will soon make a conden
 - [Storage](./storage.md)
 - [Latency and Throughput](./latency-and-throughput.md)
 - [Availability](./availability.md)
+- [Caching](./caching.md)
 
 ## Contributions
 
