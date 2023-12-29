@@ -78,15 +78,15 @@ const httpResponse = {
 
    ```javascript
    app.get ('/example', (req, res) => {
-        console.log ('Headers:', req.headers); 
-        console.log( 'Method:', req.method); 
-        res.send ('Received GET request! \n');
+        console.log('Headers:', req.headers); 
+        console.log('Method:', req.method); 
+        res.send('Received GET request! \n');
     });
     app.post('/example', (req , res) => {
-        console. log ('Headers:', req.headers) ; 
-        console. log ('Method:', req.method) ; 
-        console. log ( 'Body:', req.body) ;
-    res.send ('Received POST request!\n');
+        console.log('Headers:', req.headers) ; 
+        console.log('Method:', req.method) ; 
+        console.log('Body:', req.body) ;
+        res.send('Received POST request!\n');
     });
    ```
 
