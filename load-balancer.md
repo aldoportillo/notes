@@ -37,7 +37,7 @@ You can have multiple load balancers at different parts of the system or even th
 
 ## See it in action
 
-If you have nginx installed update your nginx.conf to:
+In nginx.conf:
 
 ```conf
 events { }
@@ -58,6 +58,8 @@ http {
     }
 }
 ```
+
+Here we implement a weighted round robin approach.
 
 ```javascript
 // In server.js
@@ -92,4 +94,4 @@ And curl the load balancer:
 curl localhost:8081/load_balancer
 ```
 
-This shows us a visual representation of a weighted round robin distribution approach. Every time we curl the load balancer, 3 requests are sent to 3000 for every 1 sent to 3001. Pretty cool 😎
+This shows us a visual representation of a weighted round robin distribution approach. Every time we curl the load balancer, we get more requests sent to port 3000 than 3001. Pretty cool 😎
