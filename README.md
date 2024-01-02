@@ -14,6 +14,7 @@ Here are my notes for learning system design concepts. I will soon make a conden
 - [Load Balancers](./load-balancer.md)
 - [Hashing](./hashing.md)
 - [Relational Databases](./relationalDatabases.md)
+- [Key Value Stores](./key-value-stores.md)
 
 ## Contributions
 
