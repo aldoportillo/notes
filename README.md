@@ -11,6 +11,8 @@ Here are my notes for learning system design concepts. I will soon make a conden
 - [Availability](./availability.md)
 - [Caching](./caching.md)
 - [Proxies](./proxies.md)
+- [Load Balancers](./load-balancer.md)
+- [Hashing](./hashing.md)
 
 ## Contributions
 
