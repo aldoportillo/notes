@@ -13,6 +13,7 @@ Here are my notes for learning system design concepts. I will soon make a conden
 - [Proxies](./proxies.md)
 - [Load Balancers](./load-balancer.md)
 - [Hashing](./hashing.md)
+- [Relational Databases](./relationalDatabases.md)
 
 ## Contributions
 
