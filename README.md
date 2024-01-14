@@ -15,6 +15,7 @@ Here are my notes for learning system design concepts. I will soon make a conden
 - [Hashing](./hashing.md)
 - [Relational Databases](./relationalDatabases.md)
 - [Key Value Stores](./key-value-stores.md)
+- [Specialized Storage Paradigm](./storage-paradigms.md)
 
 ## Contributions
 
