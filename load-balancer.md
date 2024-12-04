@@ -2,50 +2,80 @@
 
 ## Introduction
 
-Due to a server having a limited throughput, the more requests made from the client side can lead to a system failure.
+Modern web applications must handle large volumes of traffic. A single server has limited throughput and can fail when overloaded with client requests. 
 
-To fix this, we can vertically scale the server by increasing the server's resources to increase throughput but there is a limit.
+To address this issue, **vertical scaling** (upgrading server resources like CPU and memory) may seem like an option, but it has limitations, including high cost and an upper hardware limit. 
 
-The most optimal fix is to horizontally scale the server. This means adding more servers to share the workload. But how does client know where to send a request.
+A more scalable and cost-effective solution is **horizontal scaling**, which involves adding multiple servers to handle traffic. However, this introduces a challenge: **how does the client know which server to send requests to?**
 
-## Definition
+This is where a **load balancer** comes into play.
 
-A load balancer is a server that sits between clients and servers to redirect the traffic evenly to our horizontally scaled system.
+---
 
-A load balancer is like a reverse proxy or is a reverse proxy.
+## What is a Load Balancer?
 
-Although load balancers are thought of as existing between client and server due to the intuitive nature of HTTP, load balancers can exist anywhere in a system. You can have a load balancer between your server layer and database layer, you can even have load balancing at the DNS layer (DNS Round Robbin).
+A **load balancer** is a server that sits between clients and your backend servers. It evenly distributes traffic to your horizontally scaled servers, ensuring that no single server is overwhelmed while maximizing resource utilization and availability. 
 
-### DNS Round Robbin Exercise
+In essence, a load balancer acts as a **reverse proxy**.
 
-Referring back to our [notes on Network Protocols](./network-protocols.md), running dig on a domain with a load balancer in the DNS layer can return two different IPs. When you curl the IPs they return the same page. This is due to the load balancer. 
+### Beyond HTTP
 
-## How they work
+While load balancers are commonly associated with HTTP traffic between clients and servers, they can exist at various levels in a system. For example:
+- **DNS Layer:** Distributing traffic using DNS Round Robin.
+- **Application Layer:** Balancing requests between multiple web or application servers.
+- **Database Layer:** Managing database connections to replicas or shards.
 
-First a software load balancer needs to know that it has servers. This is usually done by configuring a new server to register with the load balancer when it is added and de-registers itself once removed.
+---
 
-Secondly, a load balancer needs to select a server to send traffic to:
+## DNS Round Robin Example
 
-1. Randomly
-2. Round Robin: Sends traffic to servers in a rotation.
-3. Weighted Round Robin: Still follow the round robin rotation but add more requests to the server with more resources if the servers don't contain the same amount of resources
-4. Performance: Load balancer performs health checks on servers and if one server is not handling requests well, it will not send requests to the server and vice versa.
-5. IP Based: Hash client's IP address and based of the hash it gets sent to a specific server every time. Refer back to [caching](./caching.md) to see why this is useful. Caching in server 😲
-6. Path Based: There are different servers dedicated to different paths. Pretty cool option when it comes to e-commerce I think.
+A simple form of load balancing happens at the **DNS layer**. For example, querying a domain with a load balancer using `dig` might return multiple IP addresses. When you `curl` any of these IPs, you'll often see the same content, demonstrating the load balancer's role in distributing traffic.
 
-You can have multiple load balancers at different parts of the system or even the same part of the system. Each load balancer can use a different selection strategy.
+### Try It Out:
+1. Run the command:
+   ```bash
+   dig example.com
+   ```
+2. Observe multiple A records (IP addresses) for the same domain.
+3. `curl` each IP and note how the same webpage is returned regardless of the IP.
 
-## See it in action
+---
 
-In nginx.conf:
+## How Load Balancers Work
+
+### Server Registration
+A load balancer needs to know the servers in its pool. Servers typically register with the load balancer during startup and deregister when they are removed. This ensures the load balancer operates with up-to-date information about available resources.
+
+### Traffic Distribution Strategies
+Load balancers use various algorithms to determine how traffic is distributed:
+
+1. **Random**: Distributes traffic randomly.
+2. **Round Robin**: Sends requests to servers in rotation.
+3. **Weighted Round Robin**: Adds weights to servers, assigning more traffic to servers with higher capacity.
+4. **Performance-Based**: Performs health checks on servers and routes traffic only to healthy servers.
+5. **IP-Based**: Uses the client’s IP address to hash and consistently route requests to the same server. This is particularly useful for caching.
+6. **Path-Based**: Routes requests to different servers based on the request path. For example, `/api` traffic could go to one server, and `/static` traffic could go to another.
+
+### Multiple Load Balancers
+A system can have multiple load balancers:
+- To handle traffic at different layers (e.g., HTTP, database).
+- To use different strategies for different services or endpoints.
+
+---
+
+## See It in Action
+
+Here’s a practical example of using **Nginx** as a load balancer with a **weighted round robin** approach.
+
+### Nginx Configuration
+Create or edit your `nginx.conf` file:
 
 ```conf
 events { }
 http {
-
     upstream nodejs-backend {
-        server localhost:3000 weight=3; 
-        server localhost:3001; 
+        server localhost:3000 weight=3; # Weighted server
+        server localhost:3001;         # Default weight
     }
 
     server {
@@ -59,26 +89,30 @@ http {
 }
 ```
 
-Here we implement a weighted round robin approach.
+This configuration:
+- Defines an upstream group `nodejs-backend` with two servers: one weighted heavier than the other.
+- Routes requests from `localhost:8081` to the `nodejs-backend` servers.
+
+### Backend Servers
+Create a simple `server.js` using Express:
 
 ```javascript
-// In server.js
 const express = require('express');
 const app = express();
 
 const port = process.env.PORT || 3000;
 
-app.listen (port, () => {
+app.listen(port, () => {
     console.log(`Server started on port ${port}`);
-})
+});
 
 app.get('/load_balancer', (req, res) => {
-    console.log(req.headers)
-    res.send('Load Balancer!');
-})
+    console.log(`Request handled by server on port ${port}`);
+    res.send(`Server responding from port ${port}`);
+});
 ```
 
-Finally, run your server with specified port 3000 and 3001.
+Start two instances of the server on different ports:
 
 ```bash
 PORT=3000 node server.js
@@ -88,10 +122,37 @@ PORT=3000 node server.js
 PORT=3001 node server.js
 ```
 
-And curl the load balancer:
+### Test the Load Balancer
+Send requests to the load balancer and observe the output:
 
 ```bash
 curl localhost:8081/load_balancer
 ```
 
-This shows us a visual representation of a weighted round robin distribution approach. Every time we curl the load balancer, we get more requests sent to port 3000 than 3001. Pretty cool 😎
+You should see more responses from `port 3000` than `port 3001`, illustrating the **weighted round robin** algorithm in action.
+
+---
+
+## Advanced Concepts
+
+### Health Checks
+Load balancers can periodically ping servers to check their health. If a server fails a health check, it is temporarily removed from the pool.
+
+### SSL Termination
+Load balancers can handle SSL encryption/decryption to offload the computational cost from backend servers.
+
+### Sticky Sessions
+For certain applications, it’s useful to ensure that subsequent requests from a client are routed to the same server. This can be achieved using **sticky sessions**.
+
+### Auto-Scaling
+Modern load balancers integrate with cloud platforms to add or remove servers dynamically based on traffic patterns.
+
+---
+
+## Conclusion
+
+Load balancers are a cornerstone of scalable, resilient systems. They allow applications to handle increased traffic efficiently, improve fault tolerance, and ensure smooth operations. 
+
+By understanding and configuring load balancers, you unlock the ability to build systems that can grow and adapt with user demand. 
+
+Pretty cool 😎
