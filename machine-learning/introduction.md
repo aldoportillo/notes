@@ -103,3 +103,110 @@ These algorithms don't return a true or a false but return a statistical probabi
 ### Analogy Systems
 
 The use of kernel machines to recognize patterns in data. This uses similarity to determine the best solution of a problem. This is prevalent in Recommendation Algorithms. Have you ever seen the `Customers also Bought` on Amazon?
+
+## Types of Algorithms
+
+### Artificial Neural Networks
+
+Models that mimic the structure and/or function of biological neural networks with the goal of preforming pattern regression and categorization.
+
+- Perceptron
+- Feed-forward Neural Network
+- Hopfield Network
+- Radial Basis Function Network (RBFN)
+- Self Organizing Map (SOM)
+
+### Association Rule
+
+Extracts rules that help explain the relationships between variables  in data in order to discover useful associations.
+
+- Apriori Algorithm
+- Eclat Algorithm
+
+### Bayesian
+
+Uses Bayes' theorem for probability problems. Useful for classification and regression problems.
+
+- Naive Bayes
+- Gaussian Naive Bayes
+- Multinomial Naive Bayes
+- Bayesian Belief Network (BBN)
+- Bayesian Network (BN)
+
+### Clustering
+
+Describes a model for organizing data by class with results often centroid or hierarchical in nature.
+
+- K-means
+- K-medians
+- Expectation Maximization (EM)
+- Hierarchical Clustering
+
+### Decision Trees
+
+Constructs a model based off actual values of the input data. This allows you to compare new data to the model's previous data to predict outcomes. Used for classification and regression problems.
+
+- Iterative Dichotomiser 3 (ID3)
+- Classification and Regression Trees (CART)
+- Chi-squared Automatic Interaction Detection (CHAID)
+- C4.5 and C5.0
+
+### Deep Learning Algorithm
+
+A subset of machine learning that uses neural networks with many layers. This allows the model to learn from data that is unstructured or unlabeled. (semi-supervised learning)
+
+- Deep Boltzmann Machine (DBM)
+- Deep Belief Networks (DBN)
+- Convolutional Neural Network (CNN)
+- Stacked Auto-Encoders
+- Recurrent Neural Networks (RNN)
+
+### Dimensionality Reduction
+
+Reduces the number of random variables under consideration by obtaining a set of principal variables.
+
+- Principal Component Analysis (PCA)
+- Factor Analysis
+- Multidimensional Scaling (MDS)
+- t-Distributed Stochastic Neighbor Embedding (t-SNE)
+
+### Ensemble Learning
+
+Uses multiple (weaker) learning algorithms to obtain better predictive performance than could be obtained from any of the constituent learning algorithms alone.
+
+- AdaBoost
+- Bootstrapped Aggregation (Bagging)
+- Gradient Boosting Machines (GBM)
+- Random Forest
+- Boosting
+
+### Instance-based Learning
+
+Uses the data to make predictions. This is done by comparing new problem instances with instances seen in training. This is also known as lazy learning.
+
+- K-Nearest Neighbors (KNN)
+- Learning Vector Quantization (LVQ)
+
+### Regression
+
+Predicts a continuous value. This is used for forecasting and predicting.
+
+- Ordinary Least Squares Regression (OLSR)
+- Logistic Regression
+
+### Regularization
+
+Prevents overfitting by adding a penalty term to the loss function. This favors simpler models.
+
+- Ridge Regression
+- Least Absolute Shrinkage and Selection Operator (LASSO)
+- Elastic Net
+- Least-Angle Regression (LARS)
+
+### Support Vector Machines (SVM)
+
+Classifies data by finding the hyperplane that best divides a dataset into two classes. This is used for classification and regression problems. Supports is the name of the data points that are closest to the hyperplane and kernel is the function that transforms the data into a higher dimension.
+
+- Linear SVM
+- Radial Basis Function (RBF)
+- One-Class SVM (for unsupervied learning)
